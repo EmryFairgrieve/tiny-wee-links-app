@@ -1,38 +1,55 @@
-.App {
+body {
+  margin: 0;
+  font-family: 'Roboto Mono', monospace;
+  text-shadow: 0.1em 0.1em rgba(0, 0, 0, 0.25);
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5 {
+  font-weight: 600
+}
+
+p {
+  font-size: 1.1em;
+}
+
+a, a:hover, a:focus {
+  color: #fff;
+  font-weight: 600;
+  outline: none;
+}
+
+.statistic {
+  font-size: 1.5em;
+  font-weight: 700;
+}
+
+.error-message {
+  font-size: 1em;
+  width: 100%;
+  margin: 0;
+  height: 1.6em;
+}
+
+.app {
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+  background-color: #efbb53;
+  background-image: linear-gradient(to bottom right, #f37486, #efbb53);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.input-group {
+  max-width: 40em;
+  margin: 0 auto;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.btn {
+  min-width: 8em;
 }

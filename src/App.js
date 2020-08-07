@@ -1,25 +1,48 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import axios from 'axios';
+// import ApolloClient from 'apollo-boost';
+// import { ApolloProvider } from '@apollo/react-hooks';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from 'react-router-dom';
+import Dashboard from './components/Dashboard';
+import Home from './components/Home';
 
-function App() {
+const App = () => {
+  // const client = new ApolloClient({
+  //   uri: 'https://localhost:32768/api/graphql/'
+  // });
+
+
+  //
+  // axios.post('/user', {
+  //   firstName: 'Fred',
+  //   lastName: 'Flintstone'
+  // })
+  // .then(function (response) {
+  //   console.log(response);
+  // })
+  // .catch(function (error) {
+  //   console.log(error);
+  // });
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <Router>
+        <div className="app">
+          <header className="app-header">
+            <h1>Tiny Wee Links</h1>
+          </header>
+          <main className="container">
+            <Switch>
+              <Route exact path="/" children={<Home />} />
+              <Route path="/:shortcut" children={<Dashboard />} />
+            </Switch>
+          </main>
+        </div>
+      </Router>
   );
 }
 
