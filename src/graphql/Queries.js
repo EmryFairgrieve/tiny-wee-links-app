@@ -6,7 +6,7 @@ export const GET_LINK = gql`
     link(shortcut: $shortcut, twlSecret: $twlSecret) {
       url
       expiryDate
-      secret
+      twlSecret
     }
   }
 `
@@ -17,7 +17,7 @@ export const CREATE_LINK = gql`
       shortcut,
       url,
       expiryDate,
-      secret
+      twlSecret
     }
   }
 `

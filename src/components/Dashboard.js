@@ -6,19 +6,22 @@ import {
 } from 'react-router-dom';
 import axios from 'axios';
 import Moment from 'moment';
-import {CopyToClipboard} from 'react-copy-to-clipboard';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { Bar, defaults } from 'react-chartjs-2';
 
 const Dashboard = () => {
   Moment.locale('en');
+  defaults.global.defaultFontFamily = 'Roboto Mono'
+  defaults.global.defaultFontColor = '#fff'
+  defaults.global.defaultFontSize = 14
   let { shortcut } = useParams()
   const [queryInfo, setQueryInfo] = useState({
     shortcut: shortcut,
-    secret: new URLSearchParams(useLocation().search).get('twlSecret'),
+    twlSecret: new URLSearchParams(useLocation().search).get('twlSecret'),
     dashboardLink: window.location.href
   })
   const [link, setLink] = useState({})
   const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState('')
   const [copied, setCopied] = useState(false)
 
   function redirect() {
@@ -26,29 +29,29 @@ const Dashboard = () => {
       shortcut: queryInfo.shortcut
     })
     .then(function (response) {
-      window.location.href = response.data.url + window.location.search
+      window.location.href = `${response.data.url}${window.location.search}`
     })
     .catch(function (error) {
-      setError(`This doesn't appear to be a valid tiny wee link to use.`)
+      window.location.href = '/'
       setIsLoading(false)
     });
   }
 
   function loadDashboard() {
-    axios.get(`https://localhost:5001/api/links?shortcut=${queryInfo.shortcut}&twlSecret=${queryInfo.secret}`)
+    axios.get(`https://localhost:5001/api/links?shortcut=${queryInfo.shortcut}&twlSecret=${queryInfo.twlSecret}`)
     .then(response => {
       setLink(response.data)
       setIsLoading(false)
     })
     .catch(error => {
-      setError(`There was an issue getting the dashboard for the shortcut and corresponding secret used.`)
+      window.location.href = '/'
       setIsLoading(false)
     });
   }
 
   useEffect(() => {
     setIsLoading(true)
-    if (queryInfo.secret === null) {
+    if (queryInfo.twlSecret === null) {
       redirect();
     } else {
       loadDashboard();
@@ -65,29 +68,63 @@ const Dashboard = () => {
     document.execCommand('copy');
   }
 
+  function getDaysArrayByWeek() {
+    var arrDays = [];
+    var daysInWeek = 7
+    while(daysInWeek) {
+      var current = moment().date(daysInWeek);
+      arrDays.push(current.format('ddd Do'));
+      daysInWeek--;
+    }
+    return arrDays;
+  }
+
+
+
   if (!isLoading) {
-    if (link.shortcut === queryInfo.shortcut || link.secret === queryInfo.secret) {
+    if (link.shortcut === queryInfo.shortcut || link.twlSecret === queryInfo.twlSecret) {
+
+      const myData = {
+      labels: link.chart.labels,
+      datasets: [
+        {
+          label: 'clicks per day',
+          backgroundColor: '#FFF',
+          borderColor: '#FFF',
+          borderWidth: 1,
+          hoverBackgroundColor: '#CFCFCF',
+          hoverBorderColor: '#CFCFCF',
+          data: link.chart.values
+        }
+      ]
+    };
+
       return(
         <div>
-          <section className="input-group mb-3 pt-5">
+          <section className="input-group mb-3">
             <input id="urlInput" type="text" className="form-control" disabled={true} value={`${window.location.origin}/${shortcut}`} aria-label="Original URL" aria-describedby="button-convert"/>
             <div className="input-group-append">
-              <CopyToClipboard text={`${window.location.origin}/${shortcut}`}
-                onCopy={() => setCopied(true)}>
-                <button className="btn btn-secondary" type="button" onBlur={() => setCopied(false)}>{copied ? 'Copied' : 'Copy'}</button>
+              <CopyToClipboard text={`${window.location.origin}/${shortcut}`} onCopy={() => setCopied(true)}>
+                <button className="btn btn-secondary" type="button" onBlur={() => setCopied(false)}>{copied ? 'copied' : 'copy'}</button>
               </CopyToClipboard>
             </div>
-            <p className="error-message">{error}</p>
           </section>
           <section>
-            <p>Redirects to: <a href={link.url}>{link.url}</a></p>
+            <p>redirects to: <a href={link.url}>{link.url}</a></p>
           </section>
           <section className="p-5">
-            <p className="statistic">Clicks: {link.clicks != null ? link.clicks.length : 0}</p>
-            <p className="statistic">Created: {Moment(link.dateTimeCreated).format('Do MMMM YYYY')}</p>
+            <p className="statistic">clicks: {link.clicks != null ? link.clicks.length : 0}</p>
+            <p className="statistic">created: {Moment(link.dateTimeCreated).format('MMMM Do YYYY').toLowerCase()}</p>
+          </section>
+          <section>
+            <Bar
+              data={myData}
+              height={200}
+              options={{ maintainAspectRatio: false, scales: { yAxes: [{ ticks: { stepSize: 1} }] } }}
+            />
           </section>
           <section className="p-4">
-            <p>Dashboard: <a href={queryInfo.dashboardLink}>{queryInfo.dashboardLink}</a></p>
+            <p>dashboard: <a href={queryInfo.dashboardLink}>{queryInfo.dashboardLink}</a></p>
           </section>
         </div>
       )
