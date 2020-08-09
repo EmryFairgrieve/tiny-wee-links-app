@@ -10,22 +10,21 @@ const Home = () => {
   const createLink = () => {
     setIsLoading(true)
     setConverting(true)
-    setError('')
       axios.post('https://localhost:5001/api/links', {
         url: url
       })
-      .then(function (response) {
+      .then(response =>  {
         var link = response.data
-        if (response.status !== 200) {
-          setError('Unable to create link. Please check the URL supplied.');
-          setConverting(false);
-          setIsLoading(false);
-        } else {
-          window.location.href = `${window.location.origin}/${link.shortcut}?twlSecret=${link.twlSecret}`
-        }
+        window.location.href = `${window.location.origin}/${link.shortcut}?twlSecret=${link.twlSecret}`
       })
-      .catch(function (error) {
-        setError('Unable to create link. Please check the URL supplied.');
+      .catch(error => {
+        if (error.response) {
+          setError(error.response.data.toLowerCase())
+        } else if (error.request) {
+          setError(error.request.toLowerCase())
+        } else {
+          setError(error.message.toLowerCase())
+        }
         setConverting(false);
         setIsLoading(false);
       });
@@ -39,8 +38,11 @@ const Home = () => {
     var errorMessage = ''
     var expression = /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
     var regex = new RegExp(expression);
-    if(url.match(regex) == null) {
-       errorMessage = 'Please use a valid URL';
+    if (url == '') {
+      errorMessage = 'no url was supplied';
+    }
+    else if(url.match(regex) == null) {
+       errorMessage = 'please supply a valid url';
     }
     setError(errorMessage);
   }
@@ -63,7 +65,7 @@ const Home = () => {
       </section>
       <section className="p-4">
         <h2>parameter forwarding</h2>
-        <p className="pt-4">query parameters added to the link will be passed on to the redirected URL. perfect for UTM tracking and deep linking to mobile apps.</p>
+        <p className="pt-4">query parameters added to the link will be passed on to the redirected URL. perfect for UTM tracking and deep linking to mobile apps</p>
       </section>
     </div>
   )

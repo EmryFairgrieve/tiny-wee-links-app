@@ -14,7 +14,13 @@ const ActiveLinks = () => {
       setIsLoading(false)
     })
     .catch(error => {
-      setError('Error loading active links')
+      if (error.response) {
+        setError(error.response.data.toLowerCase())
+      } else if (error.request) {
+        setError(error.request.toLowerCase())
+      } else {
+        setError(error.message.toLowerCase())
+      }
       setIsLoading(false)
     });
   }, []);
@@ -22,6 +28,7 @@ const ActiveLinks = () => {
   if (!isLoading) {
       return(
         <div>
+          <h2>{error}</h2>
           <section>
             {
                 links.map(l => (

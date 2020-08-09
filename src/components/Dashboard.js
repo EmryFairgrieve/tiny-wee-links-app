@@ -28,12 +28,11 @@ const Dashboard = () => {
     axios.post(`https://localhost:5001/api/clicks`, {
       shortcut: queryInfo.shortcut
     })
-    .then(function (response) {
+    .then(response =>  {
       window.location.href = `${response.data.url}${window.location.search}`
     })
-    .catch(function (error) {
+    .catch(error => {
       window.location.href = '/'
-      setIsLoading(false)
     });
   }
 
@@ -45,7 +44,6 @@ const Dashboard = () => {
     })
     .catch(error => {
       window.location.href = '/'
-      setIsLoading(false)
     });
   }
 
