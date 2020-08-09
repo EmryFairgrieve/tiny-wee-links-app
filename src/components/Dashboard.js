@@ -24,7 +24,7 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [copied, setCopied] = useState(false)
 
-  function redirect() {
+  const redirect = () => {
     axios.post(`https://localhost:5001/api/clicks`, {
       shortcut: queryInfo.shortcut
     })
@@ -37,7 +37,7 @@ const Dashboard = () => {
     });
   }
 
-  function loadDashboard() {
+  const loadDashboard = () => {
     axios.get(`https://localhost:5001/api/links?shortcut=${queryInfo.shortcut}&twlSecret=${queryInfo.twlSecret}`)
     .then(response => {
       setLink(response.data)
@@ -58,28 +58,12 @@ const Dashboard = () => {
     }
   }, []);
 
-  function copyUrl() {
+  const copyUrl = () => {
     var copyText = document.getElementById("urlInput");
-    console.log(copyText.value)
-
-  /* Select the text field */
     copyText.select();
     copyText.setSelectionRange(0, 99999);
     document.execCommand('copy');
   }
-
-  function getDaysArrayByWeek() {
-    var arrDays = [];
-    var daysInWeek = 7
-    while(daysInWeek) {
-      var current = moment().date(daysInWeek);
-      arrDays.push(current.format('ddd Do'));
-      daysInWeek--;
-    }
-    return arrDays;
-  }
-
-
 
   if (!isLoading) {
     if (link.shortcut === queryInfo.shortcut || link.twlSecret === queryInfo.twlSecret) {
@@ -113,7 +97,7 @@ const Dashboard = () => {
             <p>redirects to: <a href={link.url}>{link.url}</a></p>
           </section>
           <section className="p-5">
-            <p className="statistic">clicks: {link.clicks != null ? link.clicks.length : 0}</p>
+            <p className="statistic">clicks: {link.totalClicks}</p>
             <p className="statistic">created: {Moment(link.dateTimeCreated).format('MMMM Do YYYY').toLowerCase()}</p>
           </section>
           <section>

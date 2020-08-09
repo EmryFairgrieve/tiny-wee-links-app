@@ -7,7 +7,7 @@ const Home = () => {
   const [error, setError] = useState('')
   const [converting, setConverting] = useState(false)
 
-  function createLink() {
+  const createLink = () => {
     setIsLoading(true)
     setConverting(true)
     setError('')
@@ -31,11 +31,11 @@ const Home = () => {
       });
   }
 
-  function keyDown(e) {
+  const keyDown = (e) => {
     if (e.key === 'Enter') { createLink() }
   }
 
-  function checkURL() {
+  const checkUrl = () => {
     var errorMessage = ''
     var expression = /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
     var regex = new RegExp(expression);
@@ -48,7 +48,7 @@ const Home = () => {
   return(
     <div>
       <section className="input-group mb-3">
-        <input type="text" className="form-control" placeholder="https://example.com" value={url} onChange={e => setUrl(e.target.value)} onKeyDown={e => keyDown(e)} onBlur={checkURL} aria-label="Original URL" aria-describedby="button-convert"/>
+        <input type="text" className="form-control" placeholder="https://example.com" value={url} onChange={e => setUrl(e.target.value)} onKeyDown={e => keyDown(e)} onBlur={checkUrl} aria-label="Original URL" aria-describedby="button-convert"/>
         <div className="input-group-append">
           <button className="btn btn-secondary" type="button" onClick={createLink} id="button-convert">{converting ? `converting` : `convert`}</button>
         </div>

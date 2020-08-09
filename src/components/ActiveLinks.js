@@ -10,12 +10,6 @@ const ActiveLinks = () => {
     setIsLoading(true)
     axios.get(`https://localhost:5001/api/links`)
     .then(response => {
-      console.log('items')
-      response.data.forEach(function (arrayItem) {
-          console.log('item')
-          console.log(arrayItem);
-      });
-      console.log(response.data)
       setLinks(response.data)
       setIsLoading(false)
     })
