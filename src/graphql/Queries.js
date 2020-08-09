@@ -4,9 +4,16 @@ import gql from 'graphql-tag';
 export const GET_LINK = gql`
   query link($shortcut: String!, $twlSecret: String!) {
     link(shortcut: $shortcut, twlSecret: $twlSecret) {
-      url
-      expiryDate
-      twlSecret
+      url,
+      shortcut,
+      dateTimeCreated,
+      twlSecret,
+      totalClicks,
+      chart {
+          title,
+          labels,
+          values
+      }
     }
   }
 `
@@ -14,10 +21,16 @@ export const GET_LINK = gql`
 export const CREATE_LINK = gql`
   mutation createLink($url: String!) {
     createLink(url: $url) {
-      shortcut,
       url,
-      expiryDate,
-      twlSecret
+      shortcut,
+      dateTimeCreated,
+      twlSecret,
+      totalClicks,
+      chart {
+          title,
+          labels,
+          values
+      }
     }
   }
 `
@@ -25,7 +38,19 @@ export const CREATE_LINK = gql`
 export const TRACK_CLICK = gql`
   mutation trackClick($shortcut: String!) {
     trackClick(shortcut: $shortcut) {
-      url
+      url,
+      shortcut,
+      dateTimeCreated
+    }
+  }
+`
+
+export const GET_LINKS = gql`
+  query {
+    links {
+        url,
+        shortcut,
+        dateTimeCreated
     }
   }
 `
